@@ -16,7 +16,7 @@ type AssetTransferChaincode struct {
 }
 
 func init() {
-	log = logging.MustGetLogger("asset-transfer")
+	log = logging.MustGetLogger("asset-transfer-chaincode")
 	format = logging.MustStringFormatter(
 		`%{color}%{time:15:04:05.000} %{shortfunc} ▶▶▶ %{level:.4s} %{id:03x}%{color:reset} %{message}`,
 	)
@@ -24,21 +24,25 @@ func init() {
 }
 
 func main() {
-	log.Info("AssetTransferChaincode main() called ...")
+	log.Debug("AssetTransferChaincode main() called ...")
+	err := shim.Start(new(AssetTransferChaincode))
+	if err != nil {
+		log.Errorf("Error starting Simple chaincode: %s", err)
+	}
+	log.Info("The chaincode AssetTransferChaincode has been started.")
 }
 
 //
 // Init method will be called during deployment (installation?)
 //
-func (t *AssetTransferChaincode) Init(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	log.Info("Init() Chaincode...")
+func (t *AssetTransferChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
+	log.Debug("Init() Chaincode...")
 	/*
 		_, args := stub.GetFunctionAndParameters()
 		if len(args) != 0 {
 			return shim.Error("Incorrect number of arguments. Expecting 0")
 		}
 	*/
-	log.Info("Init Chaincode initialized.")
 	return shim.Success(nil)
 }
 
@@ -46,7 +50,7 @@ func (t *AssetTransferChaincode) Init(stub shim.ChaincodeStubInterface, args []s
 // Query ....
 //
 func (t *AssetTransferChaincode) Query(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	log.Info("Query() called ...")
+	log.Debug("Query() called ...")
 	return shim.Success(nil)
 }
 
@@ -54,7 +58,7 @@ func (t *AssetTransferChaincode) Query(stub shim.ChaincodeStubInterface, args []
 // Invoke ...
 //
 func (t *AssetTransferChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
-	log.Info("Invoke() called ...")
+	log.Debug("Invoke() called ...")
 
 	function, args := stub.GetFunctionAndParameters()
 	log.Infof("# of args: %d, function name: %s", len(args), function)
